@@ -1,0 +1,26 @@
+<div ngTabs>
+    <ul ngTabList [(selectedTab)]="selectedTab">
+        @for (tab of tabs(); track tab.value) {
+          <li ngTab value="{{tab.value}}">{{tab.name}}</li>
+        }
+    </ul>
+    <div class="sliding-window">
+      @for (tab of tabs(); track tab.value) {
+          <div ngTabPanel value="{{tab.value}}">
+            <ng-template ngTabContent>
+              @switch (tab.value) {
+                @case ('upload-file') {
+                  <app-upload-file></app-upload-file>
+                }
+                @case ('search-file') {
+                  <app-search-file></app-search-file>
+                }
+                @case ('chat') {
+                  <app-chat></app-chat>
+                }
+              }
+            </ng-template>
+          </div>
+      }
+    </div>
+</div>

@@ -1,0 +1,15 @@
+<section class="files-container">
+    <div class="box">
+        <input type="text" [(ngModel)]="uploadedFileSvc.filterBy" />
+        @if(uploadedFileSvc.filteredUploadedFiles()) {
+            <ul>
+                @for(file of uploadedFileSvc.filteredUploadedFiles(); track file) {
+                    <li>
+                       {{file}}
+                        <i class="fa-solid fa-trash" (click)="uploadedFileSvc.deleteFile(file)"></i>
+                    </li>
+                }
+            </ul>
+        }
+    </div>
+</section>

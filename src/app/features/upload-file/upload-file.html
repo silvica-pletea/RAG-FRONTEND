@@ -1,0 +1,60 @@
+<section class="container">
+    <div>
+        <div class="box upload-box"
+            [class.dragging]="isDragging()"
+            (dragover)="onDragOver($event)"
+            (dragleave)="onDragLeave($event)"
+            (drop)="onDrop($event)"
+            (click)="fileInput.click()">
+            
+            <input
+                #fileInput
+                type="file"
+                hidden
+                accept=".pdf"
+                (change)="onFileSelected($event)"
+            />
+
+            <i class="fa-solid fa-upload"></i>
+            <p>Drag and drop or <span class="choose">choose a file</span> to upload</p>        
+        </div>
+        <div class="box-footer space-between">
+            <span>Accepted file types: PDF files.</span>
+            <span>Max. size per file: 10MB</span>
+        </div>
+    </div>
+    @if(file().file) {
+        <div>
+            <div class="box upload-progress-box">
+                <div>
+                    <i class="fa-solid fa-close" [class.disabled]="file().uploading" (click)="onReset()"></i>
+                </div>
+                <div>File name: 
+                    <span class="choose"> 
+                        {{ file().file?.name }}
+                    </span>
+                </div>
+                <div class="progress-info">
+                    <span>{{ file().file?.size ?? 0 | fileSizeFormat}}</span>
+                    <span>{{ file().progress / 100 | percent }} </span>
+                </div>
+                <progress value="{{ file().progress }}" max="100"></progress>
+                @for(error of file().errors; track error) {
+                    <div class="text-danger margin-text">
+                        {{error}}
+                    </div>
+                }
+
+                @if(file().completed) {
+                    <div class="text-success margin-text">File uploaded!</div>
+                }
+
+            </div>
+            @if(!file().completed) {
+                <div class="box-footer flex-end">
+                    <button type="button" [disabled]="file().uploading || file().errors.length" class="btn btn-primary" (click)="onUpload()"> Upload </button>
+                </div>
+            }
+        </div>
+    }
+</section>

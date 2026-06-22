@@ -1,0 +1,40 @@
+/* Container for all errors */
+.error-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 3px; 
+}
+     
+.error-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.error-header button {
+    background: transparent;
+    border: none;
+    color: var(--page-background);
+    cursor: pointer;
+    font-size: large;
+    font-weight: bold;
+    line-height: 1;
+    padding: 0;
+    transition: transform 0.1s ease, color 0.2s ease;
+}
+
+.error-header button:hover {
+    color: var(--danger-color-hover);
+    transform: scale(1.2);
+}
+
+@keyframes slideIn {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}

@@ -1,0 +1,24 @@
+<section class="chat-container">
+    <div class="box messages-list">
+        @for (msg of chatService.messages(); track msg) {
+            <div class="message question-message ">
+                <div class="message-content">
+                {{ msg.question }}
+                </div>
+            </div>
+            @if(msg.answer) {
+                <div class="message answer-message">
+                    <div class="message-content">                 
+                        <div [innerHTML]="msg.answer"></div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+    <div class="box-footer">
+        <div class="input-container">
+            <input type="text" #search placeholder="Send message..." (keydown.enter)="getAnswer()" />
+            <i class="fa-solid fa-paper-plane" (click)="getAnswer()"></i>
+        </div>
+    </div>
+</section>

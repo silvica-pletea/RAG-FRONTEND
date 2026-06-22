@@ -1,0 +1,20 @@
+.files-container {
+    ul {
+        list-style: none;
+        padding: 0;
+
+        li {
+            padding: 1rem 0 1rem 1rem;
+
+            i {
+                float: right;
+                cursor: pointer;
+                color: var(--danger-color);
+            }
+        }
+
+        li:hover{
+            background-color: color-mix(in srgb, var(--bright-green) 5%, transparent);
+        }
+    }
+}

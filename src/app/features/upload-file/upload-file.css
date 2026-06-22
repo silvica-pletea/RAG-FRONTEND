@@ -1,0 +1,77 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
+.upload-box{   
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    
+    cursor: pointer;
+    p {
+        margin-top: 0;
+    }
+
+    i {
+        font-size: xx-large;
+        color: var(--primary-contrast);
+    }
+}
+
+.upload-box:hover,
+.upload-box.dragging {
+    background-color: color-mix(in srgb, var(--bright-green) 5%, transparent);
+}
+
+.upload-progress-box {
+    progress[value] {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 100%;
+    }
+
+    progress[value]::-webkit-progress-bar {
+        background-color: color-mix(in srgb, var(--page-color) 35%, transparent);
+        border-radius: .7rem;
+    }
+
+    progress[value]::-webkit-progress-value {
+        background-color: var(--primary-contrast);
+        transition: width 0.3s ease;
+        border-radius: .7rem;
+    }
+
+    .progress-info {
+        margin-top: 1.5rem;
+        margin-bottom: .3rem;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    i {
+        float: right;
+        cursor: pointer;
+        padding-bottom: .3rem;
+    }
+
+    i:hover {
+        opacity: 0.9;
+    }
+}
+
+.choose {
+    color: var( --primary-contrast);
+    font-weight: bold;
+}
+
+.margin-text {
+    margin: .7rem 0 0 0;
+}
+
+.flex-end {
+    justify-content: flex-end;
+}
