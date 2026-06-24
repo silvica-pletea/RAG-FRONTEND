@@ -1,62 +1,84 @@
-# RAGAPPFRONTEND
+# Lightweight RAG Frontend
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.13.
+A lightweight RAG (Retrieval-Augmented Generation) frontend built with Angular 21 standalone components and signals. It provides the UI for uploading source files, browsing them, and chatting against the indexed content.
 
-## Development server
+The backend it talks to is the **RAG-BACKEND** app, located here: https://github.com/silvica-pletea/RAG-BACKEND.git. By default the frontend expects the backend at `http://localhost:8000`.
 
-To start a local development server, run:
+## Structure
+
+```text
+src/app/
+├── core/
+│   ├── handlers/
+│   │   └── global-error-handler.ts      # Routes non-HTTP runtime errors to ErrorService
+│   └── interceptors/
+│       ├── http-error-interceptor.ts    # Routes HTTP errors to ErrorService, then re-throws
+│       └── http-loading-interceptor.ts  # Drives the global spinner (SKIP_SPINNER opts out)
+├── features/
+│   ├── chat/                            # Chat UI and RagService (POST /chat)
+│   ├── home/                            # Tabbed shell switching between the three features
+│   ├── search-file/                     # List and delete files (GET /files, DELETE /files/delete/:name)
+│   └── upload-file/                     # Upload with progress (POST /files/upload)
+├── shared/
+│   ├── components/                      # ErrorList, ErrorItem, Loading overlays
+│   ├── constants/                       # SKIP_SPINNER HttpContextToken
+│   ├── models/                          # Shared interfaces (ErrorDetails)
+│   ├── services/                        # App-wide ErrorService and LoadingService
+│   └── utils.ts                         # Shared signal/error helpers
+├── app.config.ts                        # Wires router, HttpClient interceptors, GlobalErrorHandler
+├── app.routes.ts                        # Routing (only `/` renders Home)
+└── app.ts                               # Root component hosting router-outlet + overlays
+```
+
+### IMPORTANT
+
+This setup is intended for local development and testing only. Do not use this code as-is in production environments.
+
+The backend keeps chat history in a single in-memory instance shared by all requests, so the app is effectively single-user and history is lost on restart.
+
+# Quick Start – From Zero to Working Frontend
+
+## 1. Clone the repository
+
+```bash
+git clone https://github.com/silvica-pletea/RAG-FRONTEND.git
+cd RAG-FRONTEND
+```
+
+## 2. Install dependencies
+
+```bash
+npm install
+```
+
+## 3. Start the backend
+
+The frontend needs the **RAG-BACKEND** app running at `http://localhost:8000`. Clone and start it from https://github.com/silvica-pletea/RAG-BACKEND.git (see its README for setup).
+
+## 4. Start the development server
 
 ```bash
 ng serve
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+Once the server is running, open `http://localhost:4200/` in your browser. The application will automatically reload whenever you modify any of the source files.
 
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
+## 5. Build for production
 
 ```bash
 ng build
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+This compiles the project and stores the build artifacts in the `dist/` directory, optimized for performance and speed.
 
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+## 6. Run unit tests
 
 ```bash
 ng test
 ```
 
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+Unit tests run with the [Vitest](https://vitest.dev/) test runner. No end-to-end testing framework is configured.
 
 ## Additional Resources
 
 For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
-# RAG-FRONTEND
-# RAG-FRONTEND
-# RAG-FRONTEND
