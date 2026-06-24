@@ -1,5 +1,5 @@
 import { PercentPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, inject, signal, viewChild } from '@angular/core';
 import { UploadService } from './services/upload';
 import { FileSizeFormatPipe } from './pipes/file-size-format';
 
@@ -17,6 +17,8 @@ export class UploadFile {
   protected file = this.uploadService.getFile();
   protected isDragging = signal(false);
 
+  protected fileInputElement = viewChild<ElementRef<HTMLInputElement>>('fileInput');
+
   onFileSelected(event: Event) {
     const input = event.target as HTMLInputElement;
     this.uploadService.setFile(input.files ? input.files[0] : null);
@@ -27,7 +29,7 @@ export class UploadFile {
     this.isDragging.set(true);
   }
 
-  onDragLeave(event: DragEvent) {
+  onDragLeave() {
     this.isDragging.set(false);
   }
 
@@ -35,13 +37,16 @@ export class UploadFile {
     event.preventDefault();
     this.uploadService.setFile(event.dataTransfer?.files ? event.dataTransfer.files[0] : null);
   }
-
   onUpload() {
     if(!this.file()?.file) return;
     this.uploadService.upload();
   }
 
   onReset() {
+    const fileInputControl = this.fileInputElement()?.nativeElement
+    if(fileInputControl) {
+      fileInputControl.value = '';
+    }
     this.uploadService.reset();
   }
 }

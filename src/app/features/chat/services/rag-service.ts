@@ -1,43 +1,47 @@
-import { HttpClient } from '@angular/common/http';
-import { inject, Injectable, Signal, signal } from '@angular/core';
-import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
-import { filter, switchMap, tap } from 'rxjs';
+import { HttpClient, HttpContext } from '@angular/common/http';
+import { DestroyRef, inject, Injectable, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Message, MessageResponse } from '../models/message';
+import { SKIP_SPINNER } from '../../../shared/constants/constants';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class RagService {
-    private readonly httpClient = inject(HttpClient);
-    private readonly apiUrl = 'http://localhost:8000';
-    
-    private readonly _messages = signal<Message[]>([]);
-    
-    searchQuestion = signal<string | null>(null);
-    // 'What happened with INC-2023-04-011?'
-    constructor() {
-      toObservable(this.searchQuestion).pipe(
-        filter(query => query !== null && query.trim().length > 0),
-        tap((query) => {
-          if(query) {
-            this._messages.update(messages => [...messages, { question: query, answer: null } ])
-          }
-          this.searchQuestion.set(null);
-        }),
-        switchMap(query =>
-          this.httpClient.post<MessageResponse>(`${this.apiUrl}/chat`, { question: query })
-        ),
-        takeUntilDestroyed()
-      ).subscribe(response => {
-        this._messages.update(messages =>
-          messages.map((msg, index) =>
-            index === messages.length - 1
-              ? { ...msg, answer: response?.answer }
-              : msg
-          )
-        );
+  readonly #httpClient = inject(HttpClient);
+  readonly #destroyRef = inject(DestroyRef);
+
+  readonly #apiUrl = 'http://localhost:8000';
+  readonly #messages = signal<Message[]>([]);
+  readonly messages = this.#messages.asReadonly();
+  readonly isLoading = signal(false);
+  
+  /** Sends a question to the RAG backend and appends its answer to the message list. */
+  ask(question: string): void {
+    const query = question.trim();
+    if (!query) return;
+
+    this.#messages.update((messages) => [...messages, { question: query, answer: null, isCompleted: false }]);
+    this.isLoading.set(true);
+
+    this.#httpClient
+      .post<MessageResponse>(
+        `${this.#apiUrl}/chat`,
+        { question: query },
+        { context: new HttpContext().set(SKIP_SPINNER, true) },
+      )
+      .pipe(takeUntilDestroyed(this.#destroyRef))
+      .subscribe({
+        next: (response) => this.completeLast(response.answer),
+        error: () => this.completeLast(null),
       });
-    }
-    
-    get messages(): Signal<Message[]> {
-      return this._messages.asReadonly();
-    }
+  }
+
+  /** Marks the most recent message complete with the given answer and clears the loading flag. */
+  private completeLast(answer: string | null): void {
+    this.isLoading.set(false);
+    this.#messages.update((messages) =>
+      messages.map((msg, i) => (i === messages.length - 1 ? { ...msg, answer, isCompleted: true } : msg)),
+    );
+  }
 }

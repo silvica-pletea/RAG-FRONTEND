@@ -23,7 +23,6 @@
         align-self: flex-end;
         .message-content {
             color: var(--primary-contrast);
-          
         }
     }
 
@@ -40,8 +39,36 @@
     background-color: color-mix(in srgb, var(--bright-green) 5%, transparent);
 }
 
+.answer-typing {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    height: 1.25rem;
+
+    &::before,
+    span,
+    &::after {
+        content: '';
+        display: inline-block;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background-color: var(--bright-green);
+        animation: typing-dot 1.2s infinite ease-in-out;
+    }
+
+    &::before { animation-delay: 0s; }
+    span      { animation-delay: 0.2s; }
+    &::after  { animation-delay: 0.4s; }
+}
+
+@keyframes typing-dot {
+    0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+    40%           { transform: scale(1);   opacity: 1; }
+}
+
 .box-footer {
-    
+
     .input-container {
         position: relative;
         width: 100%;

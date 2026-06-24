@@ -1,6 +1,6 @@
 export interface UploadedFiles {
-    files: string[],
-    total: number
+    files: string[];
+    total: number;
 }
 
 export const DEFAULT_UPLOADED_FILES: UploadedFiles = {

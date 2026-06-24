@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, inject, viewChild } from '@angular/core';
+import { AfterContentInit, afterRenderEffect, AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, inject, viewChild } from '@angular/core';
 import { RagService } from './services/rag-service';
 
 @Component({
@@ -6,21 +6,35 @@ import { RagService } from './services/rag-service';
   imports: [],
   templateUrl: './chat.html',
   styleUrl: './chat.css',
-  providers: [RagService],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class Chat implements AfterViewInit{
+export class Chat implements AfterContentInit{
 
   protected readonly chatService = inject(RagService);
   protected searchElement = viewChild.required<ElementRef<HTMLInputElement>>('search');
+  protected scrollContainerElement = viewChild<ElementRef>('scrollContainer')
 
-  ngAfterViewInit(): void {
-    this.searchElement().nativeElement.focus({ preventScroll: true });
+  constructor() {
+    afterRenderEffect(() => {
+      this.chatService.messages();
+      this.scrollToBottom();
+    });
   }
 
+  ngAfterContentInit(): void {
+    this.searchElement().nativeElement.focus({ preventScroll: true });
+  }
   getAnswer(): void {
+    if(this.chatService.isLoading()) {
+      return
+    }
     const value = this.searchElement().nativeElement.value;
     this.searchElement().nativeElement.value = '';
-    this.chatService.searchQuestion.set(value)
+    this.chatService.ask(value)
+  }
+
+  private scrollToBottom(): void {
+    const el = this.scrollContainerElement()?.nativeElement;
+    if (el) el.scrollTop = el.scrollHeight;
   }
 }

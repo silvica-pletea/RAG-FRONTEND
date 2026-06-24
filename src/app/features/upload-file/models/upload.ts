@@ -1,9 +1,9 @@
 export interface Upload {
-    file: File | null,
-    uploading: boolean,
-    progress: number,
-    completed: boolean,
-    errors: string[]
+    file: File | null;
+    uploading: boolean;
+    progress: number;
+    completed: boolean;
+    errors: string[];
 }
 
 export const DEFAULT_UPLOAD: Upload = {
