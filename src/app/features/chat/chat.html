@@ -9,7 +9,7 @@
              @if(msg.answer) {   
                 <div class="message answer-message">
                     <div class="message-content">      
-                            <div [innerHTML]="msg.answer"></div>
+                            <div class="markdown-body" [innerHTML]="msg.answer | markdown"></div>
                     </div>
                 </div>
             }@else {

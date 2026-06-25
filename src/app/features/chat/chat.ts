@@ -1,9 +1,10 @@
-import { AfterContentInit, afterRenderEffect, AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, inject, viewChild } from '@angular/core';
+import { AfterContentInit, afterRenderEffect, ChangeDetectionStrategy, Component, ElementRef, inject, viewChild } from '@angular/core';
 import { RagService } from './services/rag-service';
+import { MarkdownPipe } from './pipes/markdown-pipe';
 
 @Component({
   selector: 'app-chat',
-  imports: [],
+  imports: [MarkdownPipe],
   templateUrl: './chat.html',
   styleUrl: './chat.css',
   changeDetection: ChangeDetectionStrategy.OnPush
