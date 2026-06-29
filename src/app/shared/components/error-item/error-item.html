@@ -1,6 +1,9 @@
 <div class="error-box">
-    <ng-content select=".error-header"></ng-content>
+    <div class="error-header">
+        <span>Error {{ error().status ? '(' + error().status + ')' : '' }}</span>
+        <button (click)="remove.emit(error().id)">✖</button>
+    </div>
     <div class="error-body">
-    {{ error() }}
+    {{ error().message }}
     </div>
 </div>

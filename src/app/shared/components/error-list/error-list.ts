@@ -11,4 +11,8 @@ import { ErrorItem } from '../error-item/error-item';
 })
 export class ErrorList {
   protected readonly errorService = inject(ErrorService);
+
+  remove(errorId: string): void {
+    this.errorService.remove(errorId);
+  }
 }
