@@ -4,13 +4,15 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { updateProperty } from '../../../shared/utils';
 import { finalize } from 'rxjs';
 import { DEFAULT_UPLOAD, Upload } from '../models/upload';
+import { environment } from '@environments/environment';
+
 @Injectable()
 export class UploadService {
 
   readonly #httpClient = inject(HttpClient);
   readonly #destroyRef = inject(DestroyRef);
   
-  readonly #apiUrl = 'http://localhost:8000';
+  readonly #apiUrl = environment.apiUrl;
   readonly #file = signal<Upload>(DEFAULT_UPLOAD);
 
   getFile(): Signal<Upload> {

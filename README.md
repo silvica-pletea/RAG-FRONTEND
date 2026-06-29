@@ -28,7 +28,13 @@ src/app/
 ├── app.config.ts                        # Wires router, HttpClient interceptors, GlobalErrorHandler
 ├── app.routes.ts                        # Routing (only `/` renders Home)
 └── app.ts                               # Root component hosting router-outlet + overlays
+
+src/environments/
+├── environment.ts                       # Default (production) config — apiUrl baked into the build
+└── environment.development.ts           # Dev override, swapped in via angular.json fileReplacements
 ```
+
+Import the active config anywhere via the `@environments/environment` alias.
 
 ### IMPORTANT
 
@@ -78,6 +84,19 @@ ng test
 ```
 
 Unit tests run with the [Vitest](https://vitest.dev/) test runner. No end-to-end testing framework is configured.
+
+## npm scripts
+
+Convenience scripts that pin the build/serve configuration explicitly:
+
+| Script | Command | Description |
+| --- | --- | --- |
+| `npm run start:dev` | `ng serve --configuration=development` | Serve with the development config (`apiUrl` → `http://localhost:8000`) |
+| `npm run start:prod` | `ng serve --configuration=production` | Serve with the production config (`apiUrl` → `http://localhost:8001`) |
+| `npm run build:dev` | `ng build --configuration=development` | Build with the development config (unoptimized, source maps) |
+| `npm run build:prod` | `ng build --configuration=production` | Build with the production config (optimized, hashed output) |
+
+`npm start` / `ng serve` defaults to the development config, and `npm run build` / `ng build` defaults to production.
 
 ## Additional Resources
 

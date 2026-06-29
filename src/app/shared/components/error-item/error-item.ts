@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import { ErrorDetails } from '../../models/error-details';
 
 @Component({
   selector: 'app-error-item',
@@ -8,5 +9,6 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ErrorItem {
-  error = input.required<string>();
+  error = input.required<ErrorDetails>();
+  remove = output<string>()
 }

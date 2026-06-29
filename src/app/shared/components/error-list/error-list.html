@@ -1,12 +1,7 @@
  @if(errorService.errors().length) {
     <div class="error-container">
         @for(error of errorService.errors(); track error.id) {
-            <app-error-item [error]="error.message">
-                <div class="error-header">
-                <span>Error {{ error.status ? '(' + error.status + ')' : '' }}</span>
-                <button (click)="errorService.remove(error.id)">✖</button>
-                </div>
-            </app-error-item>
+            <app-error-item [error]="error" (remove)="remove($event)"></app-error-item>
         }
     </div>
 }
