@@ -3,6 +3,7 @@ import { DestroyRef, inject, Injectable, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Message, MessageResponse } from '../models/message';
 import { SKIP_SPINNER } from '../../../shared/constants/constants';
+import { environment } from '@environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -11,7 +12,7 @@ export class RagService {
   readonly #httpClient = inject(HttpClient);
   readonly #destroyRef = inject(DestroyRef);
 
-  readonly #apiUrl = 'http://localhost:8000';
+  readonly #apiUrl = environment.apiUrl;
   readonly #messages = signal<Message[]>([]);
   readonly messages = this.#messages.asReadonly();
   readonly isLoading = signal(false);

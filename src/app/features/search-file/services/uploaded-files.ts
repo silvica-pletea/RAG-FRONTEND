@@ -2,6 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import { computed, DestroyRef, inject, Injectable, signal } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { DEFAULT_UPLOADED_FILES, UploadedFiles } from "../models/uploaded-files";
+import { environment } from '@environments/environment';
 
 @Injectable()
 export class UploadedFilesService {
@@ -9,7 +10,7 @@ export class UploadedFilesService {
     readonly #httpClient = inject(HttpClient);
     readonly #destroyRef = inject(DestroyRef);
 
-    readonly #apiUrl = 'http://localhost:8000';
+    readonly #apiUrl = environment.apiUrl;
     readonly #uploadedFiles = signal<UploadedFiles>(DEFAULT_UPLOADED_FILES);
     
     readonly filterBy = signal<string>('')
