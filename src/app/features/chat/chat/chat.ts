@@ -1,6 +1,6 @@
-import { AfterContentInit, afterRenderEffect, ChangeDetectionStrategy, Component, ElementRef, inject, viewChild } from '@angular/core';
-import { RagService } from './services/rag-service';
-import { MarkdownPipe } from './pipes/markdown-pipe';
+import { AfterContentInit, afterRenderEffect, ChangeDetectionStrategy, Component, ElementRef, input, viewChild } from '@angular/core';
+import { MarkdownPipe } from '../pipes/markdown-pipe';
+import { BaseRagService } from '../services/base-rag-service';
 
 @Component({
   selector: 'app-chat',
@@ -9,15 +9,16 @@ import { MarkdownPipe } from './pipes/markdown-pipe';
   styleUrl: './chat.css',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class Chat implements AfterContentInit{
+export class Chat implements AfterContentInit {
 
-  protected readonly chatService = inject(RagService);
+  readonly chatService = input.required<BaseRagService>();
+  readonly header = input.required<string>();
   protected searchElement = viewChild.required<ElementRef<HTMLInputElement>>('search');
-  protected scrollContainerElement = viewChild<ElementRef>('scrollContainer')
+  protected scrollContainerElement = viewChild<ElementRef>('scrollContainer');
 
   constructor() {
     afterRenderEffect(() => {
-      this.chatService.messages();
+      this.chatService().messages();
       this.scrollToBottom();
     });
   }
@@ -25,13 +26,14 @@ export class Chat implements AfterContentInit{
   ngAfterContentInit(): void {
     this.searchElement().nativeElement.focus({ preventScroll: true });
   }
+
   getAnswer(): void {
-    if(this.chatService.isLoading()) {
-      return
+    if (this.chatService().isLoading()) {
+      return;
     }
     const value = this.searchElement().nativeElement.value;
     this.searchElement().nativeElement.value = '';
-    this.chatService.ask(value)
+    this.chatService().ask(value);
   }
 
   private scrollToBottom(): void {

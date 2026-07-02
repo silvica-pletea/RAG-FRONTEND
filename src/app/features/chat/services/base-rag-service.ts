@@ -1,14 +1,11 @@
 import { HttpClient, HttpContext } from '@angular/common/http';
-import { DestroyRef, inject, Injectable, signal } from '@angular/core';
+import { DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Message, MessageResponse } from '../models/message';
 import { SKIP_SPINNER } from '../../../shared/constants/constants';
 import { environment } from '@environments/environment';
 
-@Injectable({
-  providedIn: 'root',
-})
-export class RagService {
+export abstract class BaseRagService {
   readonly #httpClient = inject(HttpClient);
   readonly #destroyRef = inject(DestroyRef);
 
@@ -16,7 +13,9 @@ export class RagService {
   readonly #messages = signal<Message[]>([]);
   readonly messages = this.#messages.asReadonly();
   readonly isLoading = signal(false);
-  
+
+  protected abstract readonly type: string;
+
   /** Sends a question to the RAG backend and appends its answer to the message list. */
   ask(question: string): void {
     const query = question.trim();
@@ -28,7 +27,7 @@ export class RagService {
     this.#httpClient
       .post<MessageResponse>(
         `${this.#apiUrl}/chat`,
-        { question: query },
+        { question: query, type: `${this.type}`},
         { context: new HttpContext().set(SKIP_SPINNER, true) },
       )
       .pipe(takeUntilDestroyed(this.#destroyRef))
