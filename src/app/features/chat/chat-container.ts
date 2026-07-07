@@ -8,8 +8,6 @@ import { BM25RagService } from './services/bm25-service';
   selector: 'app-chat-container',
   imports: [ Chat ],
   template: `<section class="chat-container">
-                <app-chat class="column" [chatService]="bm25" header="BM25 Search" />
-                <app-chat class="column" [chatService]="semantic" header="Semantic Search" />
                 <app-chat class="column" [chatService]="hybrid" header="Hybrid Search" />
             </section>`,
   styles: `.chat-container {

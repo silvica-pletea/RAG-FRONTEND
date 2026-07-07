@@ -12,7 +12,6 @@ import { FormsModule } from '@angular/forms'
 })
 export class SearchFile implements OnInit {
 
-    //inject UploadedFilesService service
     protected uploadedFileSvc = inject(UploadedFilesService);
     
     ngOnInit(): void {

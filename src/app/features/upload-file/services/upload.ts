@@ -24,8 +24,8 @@ export class UploadService {
     } else {
       /* validate file extension and size */
       const errors = [];
-      const fileName = file.name.toLowerCase();
-      if(!fileName.endsWith(".pdf") && file.type === 'application/pdf') {
+      const isValidPdf = file.name.toLowerCase().endsWith('.pdf') && file.type === 'application/pdf';
+      if(!isValidPdf) {
         errors.push("File type not allowed!")
       }
       if(file.size > 10 * 1024 * 1024) {
@@ -47,8 +47,8 @@ export class UploadService {
         }),
         takeUntilDestroyed(this.#destroyRef)
       )
-      .subscribe(
-        (event: HttpEvent<unknown>) => {
+      .subscribe({
+        next: (event: HttpEvent<unknown>) => {
           if(event.type === HttpEventType.UploadProgress) {
             const progress = Math.round(
               100 * event.loaded / (event.total || 1)
@@ -57,8 +57,12 @@ export class UploadService {
           } else if (event.type === HttpEventType.Response) {
             updateProperty(this.#file, 'completed', true);
           }
+        },
+        error: () => {
+          updateProperty(this.#file, 'progress', 0);
+          updateProperty(this.#file, 'completed', false);
         }
-      );
+      });
   }
 
   reset(): void {

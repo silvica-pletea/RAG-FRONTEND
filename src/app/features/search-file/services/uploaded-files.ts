@@ -27,7 +27,8 @@ export class UploadedFilesService {
         })
     }
     deleteFile(fileName: string): void {
-        this.#httpClient.delete(`${this.#apiUrl}/files/delete/${fileName}`).pipe(
+        const name = encodeURIComponent(fileName);
+        this.#httpClient.delete(`${this.#apiUrl}/files/delete/${name}`).pipe(
             takeUntilDestroyed(this.#destroyRef)
         ).subscribe(
             () => this.#uploadedFiles.update((uploadedFiles) => {

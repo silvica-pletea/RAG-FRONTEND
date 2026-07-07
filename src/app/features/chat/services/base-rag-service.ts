@@ -12,7 +12,9 @@ export abstract class BaseRagService {
   readonly #apiUrl = environment.apiUrl;
   readonly #messages = signal<Message[]>([]);
   readonly messages = this.#messages.asReadonly();
-  readonly isLoading = signal(false);
+  readonly #isLoading = signal(false);
+  readonly isLoading = this.#isLoading.asReadonly();
+  
 
   protected abstract readonly type: string;
 
@@ -22,7 +24,7 @@ export abstract class BaseRagService {
     if (!query) return;
 
     this.#messages.update((messages) => [...messages, { question: query, answer: null, isCompleted: false }]);
-    this.isLoading.set(true);
+    this.#isLoading.set(true);
 
     this.#httpClient
       .post<MessageResponse>(
@@ -39,7 +41,7 @@ export abstract class BaseRagService {
 
   /** Marks the most recent message complete with the given answer and clears the loading flag. */
   private completeLast(answer: string | null): void {
-    this.isLoading.set(false);
+    this.#isLoading.set(false);
     this.#messages.update((messages) =>
       messages.map((msg, i) => (i === messages.length - 1 ? { ...msg, answer, isCompleted: true } : msg)),
     );
