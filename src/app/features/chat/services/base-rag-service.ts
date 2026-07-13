@@ -1,13 +1,11 @@
 import { HttpClient, HttpContext } from '@angular/common/http';
-import { DestroyRef, inject, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { inject, signal } from '@angular/core';
 import { Message, MessageResponse } from '../models/message';
 import { SKIP_SPINNER } from '../../../shared/constants/constants';
 import { environment } from '@environments/environment';
 
 export abstract class BaseRagService {
   readonly #httpClient = inject(HttpClient);
-  readonly #destroyRef = inject(DestroyRef);
 
   readonly #apiUrl = environment.apiUrl;
   readonly #messages = signal<Message[]>([]);
@@ -32,7 +30,6 @@ export abstract class BaseRagService {
         { question: query, type: `${this.type}`},
         { context: new HttpContext().set(SKIP_SPINNER, true) },
       )
-      .pipe(takeUntilDestroyed(this.#destroyRef))
       .subscribe({
         next: (response) => this.completeLast(response.answer),
         error: () => this.completeLast(null),

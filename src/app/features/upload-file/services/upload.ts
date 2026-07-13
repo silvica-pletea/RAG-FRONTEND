@@ -1,6 +1,5 @@
 import { HttpClient, HttpEvent, HttpEventType } from '@angular/common/http';
 import { DestroyRef, inject, Injectable, Signal, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { updateProperty } from '../../../shared/utils';
 import { finalize } from 'rxjs';
 import { DEFAULT_UPLOAD, Upload } from '../models/upload';
@@ -10,7 +9,6 @@ import { environment } from '@environments/environment';
 export class UploadService {
 
   readonly #httpClient = inject(HttpClient);
-  readonly #destroyRef = inject(DestroyRef);
   
   readonly #apiUrl = environment.apiUrl;
   readonly #file = signal<Upload>(DEFAULT_UPLOAD);
@@ -44,8 +42,7 @@ export class UploadService {
       .pipe(
         finalize(() => {
           updateProperty(this.#file, 'uploading', false);
-        }),
-        takeUntilDestroyed(this.#destroyRef)
+        })
       )
       .subscribe({
         next: (event: HttpEvent<unknown>) => {
